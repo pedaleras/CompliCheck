@@ -4,6 +4,7 @@ package br.com.fiap.CompliCheck.service;
 import br.com.fiap.CompliCheck.dto.EmpresaCadastroDto;
 import br.com.fiap.CompliCheck.dto.EmpresaExibicaoDto;
 import br.com.fiap.CompliCheck.dto.NormaExibicaoDto;
+import br.com.fiap.CompliCheck.exception.EmpresaNaoEncontradaException;
 import br.com.fiap.CompliCheck.model.Empresa;
 import br.com.fiap.CompliCheck.model.Norma;
 import br.com.fiap.CompliCheck.repository.EmpresaRepository;
@@ -35,7 +36,7 @@ public class EmpresaService {
         if (empresaOptional.isPresent())
             return new EmpresaExibicaoDto(empresaOptional.get());
         else
-            throw new EntityNotFoundException("Não foi possível encontrar a Empresa!");
+            throw new EmpresaNaoEncontradaException();
     }
 
     public EmpresaExibicaoDto salvar(EmpresaCadastroDto empresaCadastroDto) {
@@ -63,7 +64,7 @@ public class EmpresaService {
 
             return new EmpresaExibicaoDto(repository.save(empresa));
         } else
-            throw new RuntimeException("Contato não encontrado");
+            throw new EmpresaNaoEncontradaException();
 
     }
 }

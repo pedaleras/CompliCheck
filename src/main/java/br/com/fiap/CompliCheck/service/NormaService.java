@@ -2,6 +2,8 @@ package br.com.fiap.CompliCheck.service;
 
 import br.com.fiap.CompliCheck.dto.NormaCadastroDto;
 import br.com.fiap.CompliCheck.dto.NormaExibicaoDto;
+import br.com.fiap.CompliCheck.exception.EmpresaNaoEncontradaException;
+import br.com.fiap.CompliCheck.exception.NormaNaoEncontradaException;
 import br.com.fiap.CompliCheck.model.Empresa;
 import br.com.fiap.CompliCheck.model.Norma;
 import br.com.fiap.CompliCheck.repository.EmpresaRepository;
@@ -37,12 +39,12 @@ public class NormaService {
         if (normaOptional.isPresent())
             return new NormaExibicaoDto(normaOptional.get());
         else
-            throw new EntityNotFoundException("Não foi possível encontrar a Norma!");
+            throw new NormaNaoEncontradaException();
     }
 
     public NormaExibicaoDto salvar(NormaCadastroDto dto) {
         Empresa empresa = empresaRepository.findById(dto.empresaId())
-                .orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada"));
+                .orElseThrow(EmpresaNaoEncontradaException::new);
 
         Norma norma = new Norma();
         BeanUtils.copyProperties(dto, norma);
@@ -61,7 +63,7 @@ public class NormaService {
             BeanUtils.copyProperties(normaCadastroDto, norma);
             return new NormaExibicaoDto(repository.save(norma));
         } else
-            throw new RuntimeException("Norma não encontrada");
+            throw new NormaNaoEncontradaException();
     }
 
     public ResponseEntity<Void> deletar(Long id) {

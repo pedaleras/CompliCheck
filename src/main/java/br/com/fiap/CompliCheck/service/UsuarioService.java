@@ -3,6 +3,7 @@ package br.com.fiap.CompliCheck.service;
 
 import br.com.fiap.CompliCheck.dto.UsuarioCadastroDto;
 import br.com.fiap.CompliCheck.dto.UsuarioExibicaoDto;
+import br.com.fiap.CompliCheck.exception.UsuarioNaoEncontradoException;
 import br.com.fiap.CompliCheck.model.Usuario;
 import br.com.fiap.CompliCheck.repository.UsuarioRepository;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +33,7 @@ public class UsuarioService {
         if (usuarioOptional.isPresent())
             return new UsuarioExibicaoDto(usuarioOptional.get());
         else
-            throw new RuntimeException("Usuário não encontrado");
+            throw new UsuarioNaoEncontradoException();
     }
 
     public UsuarioExibicaoDto salvar(UsuarioCadastroDto usuarioCadastroDto) {
@@ -53,7 +54,7 @@ public class UsuarioService {
         if (usuarioOptional.isPresent())
             repository.delete(usuarioOptional.get());
         else
-            throw new RuntimeException("Usuário não encontrado");
+            throw new UsuarioNaoEncontradoException();
     }
 }
 

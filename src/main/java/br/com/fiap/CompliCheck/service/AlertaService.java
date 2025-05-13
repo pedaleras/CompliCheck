@@ -3,6 +3,7 @@ package br.com.fiap.CompliCheck.service;
 import br.com.fiap.CompliCheck.dto.AlertaCadastroDto;
 import br.com.fiap.CompliCheck.dto.AlertaExibicaoDto;
 import br.com.fiap.CompliCheck.dto.NormaExibicaoDto;
+import br.com.fiap.CompliCheck.exception.AlertaNaoEncontradoException;
 import br.com.fiap.CompliCheck.model.Alerta;
 import br.com.fiap.CompliCheck.model.Norma;
 import br.com.fiap.CompliCheck.repository.AlertaRepository;
@@ -25,7 +26,7 @@ public class AlertaService {
 
     public AlertaExibicaoDto salvar(AlertaCadastroDto dto) {
         Norma norma = normaRepository.findById(dto.normaId())
-                .orElseThrow(() -> new EntityNotFoundException("Norma não encontrada"));
+                .orElseThrow(AlertaNaoEncontradoException::new);
 
         Alerta alerta = new Alerta();
         alerta.setStatus(dto.status());
@@ -47,12 +48,12 @@ public class AlertaService {
         if (alertaOptional.isPresent())
             return new AlertaExibicaoDto(alertaOptional.get());
         else
-            throw new EntityNotFoundException("Não foi possível encontrar o Alerta!");
+            throw new AlertaNaoEncontradoException();
     }
 
     public AlertaExibicaoDto atualizar(AlertaCadastroDto dto) {
         Alerta existente = repository.findById(dto.id())
-                .orElseThrow(() -> new EntityNotFoundException("Alerta não encontrado"));
+                .orElseThrow(AlertaNaoEncontradoException::new);
 
         existente.setStatus(dto.status());
         existente.setDataVerificacao(dto.dataVerificacao());
