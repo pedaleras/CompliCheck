@@ -24,3 +24,17 @@ jobs:
 
       - name: Build and test with Maven
         run: mvn clean package -DskipTests=false
+
+      - name: Create Pull Request to Develop
+        if: success() # só cria PR se o build passar
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: develop
+          branch: ${{ github.ref_name }}
+          title: "Auto PR - Merge ${{ github.ref_name }} into develop"
+          body: |
+            Este PR foi criado automaticamente pelo workflow de CI.
+            - Branch: ${{ github.ref_name }}
+            - Pipeline: ${{ github.workflow }}
+          labels: automated
