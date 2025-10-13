@@ -50,8 +50,8 @@ jobs:
               --base develop \
               --head ${{ github.ref_name }} \
               --title "Auto PR - Merge ${{ github.ref_name }} into develop" \
-              --body "Este PR foi criado automaticamente pelo workflow de CI.\n
-              - Branch: ${{ github.ref_name }}\n
+              --body "Este PR foi criado automaticamente pelo workflow de CI. \n
+              - Branch: ${{ github.ref_name }} \n
               - Pipeline: ${{ github.workflow }}" \
               --label automated
           fi
