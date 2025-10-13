@@ -28,7 +28,8 @@ jobs:
         run: mvn clean package -DskipTests=false
 
       - name: Create Pull Request to Develop
-        if: success() # só cria PR se o build passar
+        id: create_pr
+        if: success()
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -40,3 +41,10 @@ jobs:
             - Branch: ${{ github.ref_name }}
             - Pipeline: ${{ github.workflow }}
           labels: automated
+
+      - name: Fail if PR not created
+        if: steps.create_pr.outputs.pull-request-operation == 'none'
+        run: |
+          echo "❌ Nenhum PR foi criado — branch está igual à develop."
+          exit 1
+
