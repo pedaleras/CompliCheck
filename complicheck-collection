@@ -1,0 +1,581 @@
+type: collection.insomnia.rest/5.0
+name: CompliCheck API
+meta:
+  id: wrk_2de0df92feab495691d06f2f7a759816
+  created: 1747062431711
+  modified: 1747062431711
+collection:
+  - name: Auth
+    meta:
+      id: fld_268409f851a0485a909d03dec2d98eb9
+      created: 1747062431715
+      modified: 1747062431715
+      sortKey: -1747061576354
+    children:
+      - url: http://localhost:8080/auth/register
+        name: Registrar Usuario
+        meta:
+          id: req_8c69a8fa7c1d41f7b5417a51e937db62
+          created: 1747062557694
+          modified: 1747081562211
+          isPrivate: false
+          sortKey: -1747061542033
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nome":"Teste teste",
+            	"email":"teste@email.com",
+            	"senha":"123456",
+            	"role":"USER"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_924c877a7c8e4accaa7eddc84ac49968
+          - name: User-Agent
+            value: insomnia/11.1.0
+            id: pair_1f0599846f0d49608b14e3b013337391
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/auth/login
+        name: Login ADMIN
+        meta:
+          id: req_b66e4ea5bd564ec7bbb24cb5a2d77d38
+          created: 1747062704765
+          modified: 1747073844540
+          isPrivate: false
+          sortKey: -1747061541933
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email":"pedro@email.com",
+            	"senha":"123456"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_e8c6b293607043c38b98bb0870071f54
+          - name: User-Agent
+            value: insomnia/11.1.0
+            id: pair_9860999a50c24ba5b15bf46fddf7683a
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/auth/login
+        name: Login USER
+        meta:
+          id: req_4db135077e23470b964ffb78bf205a09
+          created: 1747073838119
+          modified: 1747073849440
+          isPrivate: false
+          sortKey: -1746898847247.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email":"user@email.com",
+            	"senha":"123456"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_e8c6b293607043c38b98bb0870071f54
+          - name: User-Agent
+            value: insomnia/11.1.0
+            id: pair_9860999a50c24ba5b15bf46fddf7683a
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Norma
+    meta:
+      id: fld_40198cc71eee417ba1d1edafca7b88cf
+      created: 1747062431723
+      modified: 1747062431723
+      sortKey: -1747061571133
+    children:
+      - name: Alerta
+        meta:
+          id: fld_dce187e8b4704b7f8f024873b4415098
+          created: 1747062431720
+          modified: 1747078113186
+          sortKey: -1747061602690
+        children:
+          - url: http://localhost:8080/api/alertas
+            name: Listar Alertas
+            meta:
+              id: req_fff2c344358e4b32ac972c6eedb9d918
+              created: 1747062431721
+              modified: 1747081169053
+              isPrivate: false
+              sortKey: -1747061589379
+            method: GET
+            headers:
+              - id: pair_0d8b3e6a23fc4a1ab2ca8f482205f2b9
+                name: Authorization
+                value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+                  'b64::JC50b2tlbg==::46b', 'always', 300 %}
+                disabled: false
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: http://localhost:8080/api/alertas
+            name: Criar Alerta
+            meta:
+              id: req_d9506e81a7f545118bd4bce075816059
+              created: 1747062431722
+              modified: 1747081065727
+              isPrivate: false
+              sortKey: -1747061589279
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                  "status": "Atenção",
+                  "dataVerificacao": "2025-06-15",
+                  "normaId": 5
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+                id: pair_9bdd4ae89d81403da9d46711915a7de0
+              - id: pair_161ae2b3b2784a4faeab6fd6b1aef9d1
+                name: Authorization
+                value: Bearer {% response 'body', 'req_4db135077e23470b964ffb78bf205a09',
+                  'b64::JC50b2tlbg==::46b', 'always', 300 %}
+                disabled: false
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: http://localhost:8080/api/alertas
+            name: Atualizar Alerta
+            meta:
+              id: req_c2bfdcbcd4e04552a274b49a15157d1b
+              created: 1747081147469
+              modified: 1747081333229
+              isPrivate: false
+              sortKey: -1747061589229
+            method: PUT
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"id": 1,
+                  "status": "Atenção",
+                  "dataVerificacao": "2025-06-15",
+                  "normaId": 5
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+                id: pair_9bdd4ae89d81403da9d46711915a7de0
+              - id: pair_161ae2b3b2784a4faeab6fd6b1aef9d1
+                name: Authorization
+                value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+                  'b64::JC50b2tlbg==::46b', 'always', 300 %}
+                disabled: false
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: http://localhost:8080/api/alertas/2
+            name: Deletar Alerta
+            meta:
+              id: req_b09bf705a6c9489e9ff3ada367d4bf18
+              created: 1747081353254
+              modified: 1747081386153
+              isPrivate: false
+              sortKey: -1747061565631
+            method: DELETE
+            headers:
+              - id: pair_161ae2b3b2784a4faeab6fd6b1aef9d1
+                name: Authorization
+                value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+                  'b64::JC50b2tlbg==::46b', 'always', 300 %}
+                disabled: false
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - url: http://localhost:8080/api/normas
+        name: Listar Normas
+        meta:
+          id: req_fbe6026b89734f569dfb66c9e8f68911
+          created: 1747062431723
+          modified: 1747080565220
+          isPrivate: false
+          sortKey: -1747061602990
+        method: GET
+        headers:
+          - id: pair_478895b7a89244da8a05f2aa0f78c5f0
+            name: Authorization
+            value: Bearer {% response 'body', 'req_4db135077e23470b964ffb78bf205a09',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/normas
+        name: Criar Norma
+        meta:
+          id: req_0329a9820ebc425c89880ae7e3854e46
+          created: 1747062431724
+          modified: 1747080549654
+          isPrivate: false
+          sortKey: -1747061602890
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "descricao": "Gestão de resíduos líquidos",
+              "categoria": "ambiental",
+              "dataLimite": "2025-12-31",
+              "empresaId": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_2c050aa3f9134b5a865b37a0d863ee92
+          - id: pair_3557b069683148888f3657abc15c9e9b
+            name: Authorization
+            value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/normas
+        name: Atualizar Norma
+        meta:
+          id: req_333792537d4d4d51bd73096951c85e61
+          created: 1747080144534
+          modified: 1747080526091
+          isPrivate: false
+          sortKey: -1747061602840
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"id": 5,
+              "descricao": "Gestão de resíduos sólidos",
+              "categoria": "ambiental",
+              "dataLimite": "2025-12-31",
+              "empresaId": 1
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_2c050aa3f9134b5a865b37a0d863ee92
+          - id: pair_3557b069683148888f3657abc15c9e9b
+            name: Authorization
+            value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/normas/6
+        name: Deletar Norma
+        meta:
+          id: req_013e4edb2fa64228a94f2fd8f292cb2e
+          created: 1747080578419
+          modified: 1747080597396
+          isPrivate: false
+          sortKey: -1747061602765
+        method: DELETE
+        headers:
+          - id: pair_478895b7a89244da8a05f2aa0f78c5f0
+            name: Authorization
+            value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Empresa
+    meta:
+      id: fld_b05e04f6e2e743daae6132b79df616c5
+      created: 1747062431725
+      modified: 1747062935665
+      sortKey: -1747061573718.5
+    children:
+      - url: http://localhost:8080/api/empresas/1
+        name: Buscar Empresa por ID
+        meta:
+          id: req_6d0a6c10532243a890f478f019aa92b3
+          created: 1747062431725
+          modified: 1747080156671
+          isPrivate: false
+          sortKey: -1747061626119
+        method: GET
+        parameters:
+          - name: id
+            value: "1"
+            id: param_id Empresa
+        headers:
+          - id: pair_0fd0f1d144bb4157a4ff7ce34f3b5095
+            name: Authorization
+            value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/empresas
+        name: Listar Empresas
+        meta:
+          id: req_1fbf8e8b8bfd48ac8422484023be7adc
+          created: 1747062431726
+          modified: 1747080155050
+          isPrivate: false
+          sortKey: -1747061626169
+        method: GET
+        headers:
+          - id: pair_2a6fc80093414e4fbbdaec8bf9c0f1ae
+            name: Authorization
+            value: Bearer {% response 'body', 'req_4db135077e23470b964ffb78bf205a09',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/empresas
+        name: Criar Empresa
+        meta:
+          id: req_e794f8b8c47142beb1dd420a1587df69
+          created: 1747062431727
+          modified: 1747082523851
+          isPrivate: false
+          sortKey: -1747061626069
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Empresa A",
+              "cnpj": "12345678900013",
+              "setor": "indústria"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_63cf3aaa14c0419ea70e3a8016df9841
+          - id: pair_bb11937891c343498d3894c49ee9a4d5
+            name: Authorization
+            value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/empresas/
+        name: Atualizar Empresa
+        meta:
+          id: req_c3b4011ade5d4075a59d790332d54ce2
+          created: 1747062431728
+          modified: 1747082535381
+          isPrivate: false
+          sortKey: -1747061625994
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"id": 1,
+            	"nome": "Empresa X",
+            	"cnpj": "12345678000199",
+            	"setor": "transporte"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_3805f4bde16d468fb8145105c86d44d7
+          - id: pair_9133c732ac8f4fa4818f6a89316bd5d6
+            name: Authorization
+            value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/empresas/6
+        name: Deletar Empresa
+        meta:
+          id: req_f73224f256fc4d889dc51031eddb8c74
+          created: 1747062431729
+          modified: 1747076460392
+          isPrivate: false
+          sortKey: -1747061625969
+        method: DELETE
+        parameters:
+          - name: id
+            value: "1"
+            id: param_id_empresa_delete
+        headers:
+          - id: pair_54ea6a78498a470daf152ed267ef5be1
+            name: Authorization
+            value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Usuario
+    meta:
+      id: fld_f09c41b884c74664a6dd4802543f464a
+      created: 1747062912132
+      modified: 1747062932539
+      sortKey: -1747061528559.5
+    children:
+      - url: http://localhost:8080/api/usuarios
+        name: Listar Usuários
+        meta:
+          id: req_7c3eb784840a437fa7b3c494e02d6c2c
+          created: 1747062431717
+          modified: 1747081684633
+          isPrivate: false
+          sortKey: -1747062942440
+        method: GET
+        headers:
+          - id: pair_90cb03ddd6eb4d94b41eb6f6e34c6043
+            name: Authorization
+            value: Bearer {% response 'body', 'req_4db135077e23470b964ffb78bf205a09',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/usuarios/4
+        name: Deletar Usuario
+        meta:
+          id: req_28f075a7cdba4ae68224034d6ddce35d
+          created: 1747081515282
+          modified: 1747082371562
+          isPrivate: false
+          sortKey: -1747062942340
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+            id: pair_1f0599846f0d49608b14e3b013337391
+          - id: pair_8e82399b6ada4cc4bcc30f97ad3c3b5e
+            name: Authorization
+            value: Bearer {% response 'body', 'req_b66e4ea5bd564ec7bbb24cb5a2d77d38',
+              'b64::JC50b2tlbg==::46b', 'always', 300 %}
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_b62a1840d85742cba8645084df80a540
+    created: 1747062431713
+    modified: 1747062431713
+environments:
+  name: Base Environment
+  meta:
+    id: env_279b109d97cb460cb021df1be8592ad5
+    created: 1747062431712
+    modified: 1747062431712
+    isPrivate: false
