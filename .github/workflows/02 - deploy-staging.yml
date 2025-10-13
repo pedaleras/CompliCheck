@@ -42,18 +42,28 @@ jobs:
         run: |
           gh label list | grep -q "^automated$" || gh label create automated --color FFFFFF --description "PRs created automatically"
 
-      - name: Create Pull Request to Main
+      - name: Create or Update Pull Request to Main
         id: create_pr
         run: |
-          git fetch origin main
-          if git diff --quiet origin/main..HEAD; then
-            echo "❌ Branch develop está igual à main, PR não será criado"
-            exit 1
-          fi
+          # Busca PRs abertos de develop para main
+          PR_URL=$(gh pr list --base main --head develop --json url -q '.[0].url')
 
-          gh pr create \
-            --base main \
-            --head develop \
-            --title "Auto PR - Merge develop into main" \
-            --body "Este PR foi criado automaticamente pelo workflow de CD.\n- Branch: develop\n- Pipeline: ${{ github.workflow }}" \
-            --label automated
+          if [ -n "$PR_URL" ]; then
+            echo "PR já existe: $PR_URL — atualizando o PR"
+            gh pr edit "$PR_URL" \
+              --title "Auto PR - Merge develop into main" \
+              --body "Este PR foi atualizado automaticamente pelo workflow de CD.\n
+              - Branch: develop \n
+              - Pipeline: ${{ github.workflow }}" \
+              --add-label automated
+          else
+            echo "Criando novo PR..."
+              gh pr create \
+              --base main \
+              --head develop \
+              --title "Auto PR - Merge develop into main" \
+              --body "Este PR foi criado automaticamente pelo workflow de CD.\n
+              - Branch: develop \n
+              - Pipeline: ${{ github.workflow }}" \
+              --label automated
+          fi

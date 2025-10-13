@@ -30,20 +30,28 @@ jobs:
       - name: Authenticate GitHub CLI
         run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Create Pull Request to Develop
+      - name: Create or Update Pull Request to Develop
         id: create_pr
         run: |
-          # Verifica se a branch já difere da develop
-          git fetch origin develop
-          if git diff --quiet origin/develop..HEAD; then
-            echo "❌ Branch está igual à develop, PR não será criado"
-            exit 1
-          fi
+          # Busca PRs abertos da branch atual para develop
+          PR_URL=$(gh pr list --base develop --head ${{ github.ref_name }} --json url -q '.[0].url')
 
-          # Cria o PR
-          gh pr create \
-            --base develop \
-            --head ${{ github.ref_name }} \
-            --title "Auto PR - Merge ${{ github.ref_name }} into develop" \
-            --body "Este PR foi criado automaticamente pelo workflow de CI.\n- Branch: ${{ github.ref_name }}\n- Pipeline: ${{ github.workflow }}" \
-            --label automated
+          if [ -n "$PR_URL" ]; then
+            echo "PR já existe: $PR_URL — atualizando o PR"
+            gh pr edit "$PR_URL" \
+              --title "Auto PR - Merge ${{ github.ref_name }} into develop" \
+              --body "Este PR foi atualizado automaticamente pelo workflow de CI.\n
+              - Branch: ${{ github.ref_name }}\n
+              - Pipeline: ${{ github.workflow }}" \
+              --add-label automated
+          else
+            echo "Criando novo PR..."
+            gh pr create \
+              --base develop \
+              --head ${{ github.ref_name }} \
+              --title "Auto PR - Merge ${{ github.ref_name }} into develop" \
+              --body "Este PR foi criado automaticamente pelo workflow de CI.\n
+              - Branch: ${{ github.ref_name }}\n
+              - Pipeline: ${{ github.workflow }}" \
+              --label automated
+          fi
