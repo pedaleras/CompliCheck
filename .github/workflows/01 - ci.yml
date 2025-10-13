@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - 'feature/*'
-  pull_request:
-    branches:
-      - develop
 
 jobs:
   build-test:
@@ -34,8 +31,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: develop
-          branch: ${{ github.head_ref  }}
-          title: "Auto PR - Merge ${{ github.head_ref  }} into develop"
+          branch: ${{ github.ref_name  }}
+          title: "Auto PR - Merge ${{ github.ref_name  }} into develop"
           body: |
             Este PR foi criado automaticamente pelo workflow de CI.
             - Branch: ${{ github.ref_name }}
