@@ -24,7 +24,7 @@ jobs:
       - name: Build JAR
         run: mvn clean package -DskipTests=false
 
-      - name: Set up Docker Buildx
+      - name: Set up Docker Build
         uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
@@ -58,8 +58,8 @@ jobs:
             echo "PR já existe: $PR_URL — atualizando o PR"
             gh pr edit "$PR_URL" \
               --title "Auto PR - Merge develop into main" \
-              --body "Este PR foi atualizado automaticamente pelo workflow de CD.\n
-              - Branch: develop \n
+              --body "Este PR foi atualizado automaticamente pelo workflow de CD. \
+              - Branch: develop \
               - Pipeline: ${{ github.workflow }}" \
               --add-label automated
           else
@@ -68,8 +68,8 @@ jobs:
               --base main \
               --head develop \
               --title "Auto PR - Merge develop into main" \
-              --body "Este PR foi criado automaticamente pelo workflow de CD.\n
-              - Branch: develop \n
+              --body "Este PR foi criado automaticamente pelo workflow de CD.\
+              - Branch: develop \
               - Pipeline: ${{ github.workflow }}" \
               --label automated
           fi
