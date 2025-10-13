@@ -38,3 +38,4 @@ jobs:
             - Branch: ${{ github.ref_name }}
             - Pipeline: ${{ github.workflow }}
           labels: automated
+          always-create: true
