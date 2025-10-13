@@ -1,0 +1,29 @@
+name: CD - Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pull staging image and retag for production
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/complicheck:staging
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/complicheck:staging ${{ secrets.DOCKERHUB_USERNAME }}/complicheck:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/complicheck:latest
+
+      - name: Deploy to Production (placeholder)
+        run: echo "Deploying to production environment..."

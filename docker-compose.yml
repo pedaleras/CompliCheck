@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  complicheck:
+    image: pedaleras/complicheck:v0.02
+    container_name: compli-check
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    restart: always
