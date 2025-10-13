@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-dept: 0
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -38,4 +40,3 @@ jobs:
             - Branch: ${{ github.ref_name }}
             - Pipeline: ${{ github.workflow }}
           labels: automated
-          always-create: true
