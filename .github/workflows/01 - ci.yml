@@ -45,3 +45,4 @@ jobs:
           echo "❌ Nenhum PR foi criado — branch está igual à develop."
           exit 1
 
+#teste agora vai
