@@ -48,10 +48,6 @@ jobs:
       - name: Authenticate GitHub CLI
         run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Ensure "automated" label exists
-        run: |
-          gh label list | grep -q "^automated$" || gh label create automated --color FFFFFF --description "PRs created automatically"
-
       - name: Create or Update Pull Request to Main
         id: create_pr
         run: |
