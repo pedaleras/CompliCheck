@@ -1,0 +1,57 @@
+name: CI - Build & Test
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build and test with Maven
+        run: mvn clean package -DskipTests=false
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh -y
+
+      - name: Authenticate GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Create or Update Pull Request to Develop
+        id: create_pr
+        run: |
+          # Busca PRs abertos da branch atual para develop
+          PR_URL=$(gh pr list --base develop --head ${{ github.ref_name }} --json url -q '.[0].url')
+
+          if [ -n "$PR_URL" ]; then
+            echo "PR já existe: $PR_URL — atualizando o PR"
+            gh pr edit "$PR_URL" \
+              --title "Auto PR - Merge ${{ github.ref_name }} into develop" \
+              --body "Este PR foi atualizado automaticamente pelo workflow de CI.\n
+              - Branch: ${{ github.ref_name }}\n
+              - Pipeline: ${{ github.workflow }}" \
+              --add-label automated
+          else
+            echo "Criando novo PR..."
+            gh pr create \
+              --base develop \
+              --head ${{ github.ref_name }} \
+              --title "Auto PR - Merge ${{ github.ref_name }} into develop" \
+              --body "Este PR foi criado automaticamente pelo workflow de CI. \n
+              - Branch: ${{ github.ref_name }} \n
+              - Pipeline: ${{ github.workflow }}" \
+              --label automated
+          fi

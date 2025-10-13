@@ -1,0 +1,69 @@
+name: CD - Deploy to Staging
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image (staging)
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/complicheck:staging .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/complicheck:staging
+
+      - name: Deploy to Staging (placeholder)
+        run: echo "Deploying to staging environment..."
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh -y
+
+      - name: Authenticate GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Ensure "automated" label exists
+        run: |
+          gh label list | grep -q "^automated$" || gh label create automated --color FFFFFF --description "PRs created automatically"
+
+      - name: Create or Update Pull Request to Main
+        id: create_pr
+        run: |
+          # Busca PRs abertos de develop para main
+          PR_URL=$(gh pr list --base main --head develop --json url -q '.[0].url')
+
+          if [ -n "$PR_URL" ]; then
+            echo "PR já existe: $PR_URL — atualizando o PR"
+            gh pr edit "$PR_URL" \
+              --title "Auto PR - Merge develop into main" \
+              --body "Este PR foi atualizado automaticamente pelo workflow de CD.\n
+              - Branch: develop \n
+              - Pipeline: ${{ github.workflow }}" \
+              --add-label automated
+          else
+            echo "Criando novo PR..."
+              gh pr create \
+              --base main \
+              --head develop \
+              --title "Auto PR - Merge develop into main" \
+              --body "Este PR foi criado automaticamente pelo workflow de CD.\n
+              - Branch: develop \n
+              - Pipeline: ${{ github.workflow }}" \
+              --label automated
+          fi
