@@ -32,22 +32,28 @@ jobs:
       - name: Deploy to Staging (placeholder)
         run: echo "Deploying to staging environment..."
 
-      - name: Create PR to Main
-        id: create_pr
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: main
-          branch: develop
-          title: "Auto PR - Merge develop into main"
-          body: |
-            Este PR foi criado automaticamente pelo workflow de CD.
-            - Branch: develop
-            - Pipeline: ${{ github.workflow }}
-          labels: automated
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh -y
 
-      - name: Fail if PR not created
-        if: steps.create_pr.outputs.pull-request-operation == 'none'
+      - name: Authenticate GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Ensure "automated" label exists
         run: |
-          echo "❌ Nenhum PR foi criado — branch develop está igual à main."
-          exit 1
+          gh label list | grep -q "^automated$" || gh label create automated --color FFFFFF --description "PRs created automatically"
+
+      - name: Create Pull Request to Main
+        id: create_pr
+        run: |
+          git fetch origin main
+          if git diff --quiet origin/main..HEAD; then
+            echo "❌ Branch develop está igual à main, PR não será criado"
+            exit 1
+          fi
+
+          gh pr create \
+            --base main \
+            --head develop \
+            --title "Auto PR - Merge develop into main" \
+            --body "Este PR foi criado automaticamente pelo workflow de CD.\n- Branch: develop\n- Pipeline: ${{ github.workflow }}" \
+            --label automated
