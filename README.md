@@ -24,6 +24,22 @@
 
 Este projeto faz parte de uma atividade prática avaliativa, com foco na construção de uma solução backend segura e containerizada.
 
+## ⚙️ Arquivo .env — Configuração de Ambiente
+
+Antes de rodar o container, é necessário criar um arquivo chamado .env na raiz do projeto.
+Ele define as variáveis sensíveis utilizadas pela aplicação, como credenciais do banco e o segredo JWT.
+
+📄 Exemplo de .env
+```bash
+# Banco de dados Oracle
+SPRING_DATASOURCE_URL=jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL
+SPRING_DATASOURCE_USERNAME=USUARIO
+SPRING_DATASOURCE_PASSWORD=SENHA
+
+# JWT Secret
+JWT_SECRET=SECRET
+```
+
 ## 🐳 Instruções para Testar o CompliCheck no Docker
 
 Estas instruções permitem que avaliadores validem rapidamente a imagem Docker `pedaleras/complicheck:v0.01`.
@@ -31,31 +47,36 @@ Estas instruções permitem que avaliadores validem rapidamente a imagem Docker 
 ---
 
 ### 1. Puxar a Imagem
-Baixe a tag `v0.01` do CompliCheck:
+Baixe a tag `latest` do CompliCheck:
 
 ```bash
-docker pull pedaleras/complicheck:v0.01
+docker pull pedaleras/complicheck:latest
 ```
 O Docker busca a imagem e a armazena localmente
 
 ---
 
-### 2. Iniciar o Container
+### 2. Criar o arquivo .env
+
+Antes de iniciar o container, crie o arquivo `.env` conforme o exemplo acima.
+
+### 3. Iniciar o Container
 Execute o container em segundo plano, expondo a porta 8080:
 
 ```bash
 docker run --name compli-check-test \
-  -d \                              # modo detached  
-  -p 8080:8080 \                    # mapeia porta host → container  
-  pedaleras/complicheck:v0.01       # imagem a executar
+  --env-file .env \                  # carrega variáveis de ambiente  
+  -d \                               # modo detached  
+  -p 8080:8080 \                     # mapeia porta host → container  
+  pedaleras/complicheck:latest        # imagem a executar
 ```
-`-d` inicia o container em background.
-
-`-p host:container` publica a porta para acesso externo .
+- `--env-file` garante que as variáveis configuradas sejam passadas para o container.
+- `-d` inicia o container em background.
+- `-p host:container` publica a porta para acesso externo .
 
 ---
 
-### 3. Verificar Containers em Execução
+### 4. Verificar Containers em Execução
 Liste os containers ativos:
 
 ```bash
@@ -66,7 +87,7 @@ Você deverá ver `compli-check-test` com STATUS “Up” e `0.0.0.0:8080->8080/
 
 ---
 
-### 4. Testar a API
+### 5. Testar a API
 
 Importe o [arquivo da collection](complicheck-collection) no Insomnia e faça os testes
 

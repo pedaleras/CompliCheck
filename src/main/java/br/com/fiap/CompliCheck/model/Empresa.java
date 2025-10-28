@@ -3,6 +3,7 @@ package br.com.fiap.CompliCheck.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,7 @@ public class Empresa {
     private String setor;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private List<Norma> normas;
+    private List<Norma> normas = new ArrayList<>();
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<Usuario> usuarios;
